@@ -61,13 +61,19 @@ def get_latest_news(feed_url):
 
 # --- 슬랙 메시지 생성 ---
 def create_slack_message(news_items):
-    """Slack Block Kit을 사용하여 보기 좋은 메시지를 만듭니다."""
+    """
+    Slack Block Kit을 사용하여 UI 예시처럼 카드형 뉴스 리스트를 만듭니다.
+    item['text']: 뉴스 제목/요약 등 (mrkdwn)
+    item['site']: 사이트명
+    item['url']: 뉴스 원문 링크
+    item['meta']: 부가정보(시간/조회/댓글 등)
+    """
     blocks = [
         {
             "type": "header",
             "text": {
                 "type": "plain_text",
-                "text": f"📰 오늘의 IT 뉴스 ({datetime.now().strftime('%Y-%m-%d')})",
+                "text": f"📑 오늘의 주요 뉴스 (상위 {len(news_items)})",
                 "emoji": True
             }
         }
@@ -81,21 +87,25 @@ def create_slack_message(news_items):
         return {"blocks": blocks}
 
     for item in news_items:
-        blocks.extend([
-            {"type": "divider"},
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": item['text']
-                }
+        # 뉴스카드(구분선+섹션)
+        blocks.append({"type": "divider"})
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*{item['site']}*\n{item['text']}\n_{item['meta']}_"
+            },
+            "accessory": {
+                "type": "button",
+                "text": {"type": "plain_text", "text": "읽기"},
+                "url": item["url"]
             }
-        ])
-        # Slack 메시지 블록 제한(50개)에 근접하지 않도록 조절
+        })
         if len(blocks) > 45:
             break
-            
+
     return {"blocks": blocks}
+
 
 def send_to_slack(message_payload):
     """생성된 메시지를 슬랙 웹훅으로 전송합니다."""
