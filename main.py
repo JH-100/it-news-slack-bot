@@ -132,8 +132,7 @@ def main():
         for entry in get_latest_news(url):
             translated_title = translate_text(entry.title)
             all_news.append({
-                "text": f"🌍 *[{name}]* <{entry.link}|{translated_title}>
-`원문`: {entry.title}"
+                "text": f"🌍 *[{name}]* <{entry.link}|{translated_title}>`원문`: {entry.title}"
             })
     
     if not all_news:
