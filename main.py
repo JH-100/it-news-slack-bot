@@ -129,20 +129,43 @@ def main():
 
     # 국내 뉴스 수집
     for name, url in KOREAN_FEEDS.items():
-        print(f"국내 뉴스 수집 중: {name}")
-        for entry in get_latest_news(url):
-            all_news.append({
-                "text": f"🇰🇷 *[{name}]* <{entry.link}|{entry.title}>"
-            })
+    print(f"국내 뉴스 수집 중: {name}")
+    for entry in get_latest_news(url):
+        # 부가정보(meta) 예시 (published, 조회수, 댓글수 모두 optional)
+        published = entry.get('published', '')[:16]  # 없으면 ''
+        # GeekNews 등은 summary에 조회수/댓글수가 있을 수도 있음
+        summary = entry.get('summary', '')
+        import re
+        views = re.search(r'조회수\s?([0-9.,Kk]+)', summary)
+        comments = re.search(r'댓글\s?([0-9.,Kk]+)', summary)
+        views = views.group(1) if views else ''
+        comments = comments.group(1) if comments else ''
+        # meta 조립
+        meta = published
+        if views:
+            meta += f" · 조회수 {views}"
+        if comments:
+            meta += f" · 댓글 {comments}"
+        # 뉴스 dict 만들기
+        all_news.append({
+            "site": name,
+            "text": entry.title,
+            "meta": meta.strip(),
+            "url": entry.link
+        })
 
     # 해외 뉴스 수집 및 번역
-    for name, url in FOREIGN_FEEDS.items():
-        print(f"해외 뉴스 수집 중: {name}")
-        for entry in get_latest_news(url):
-            translated_title = translate_text(entry.title)
-            all_news.append({
-                "text": f"🌍 *[{name}]* <{entry.link}|{translated_title}>`원문`: {entry.title}"
-            })
+   for name, url in FOREIGN_FEEDS.items():
+    print(f"해외 뉴스 수집 중: {name}")
+    for entry in get_latest_news(url):
+        published = entry.get('published', '')[:16]
+        meta = published
+        all_news.append({
+            "site": name,
+            "text": translate_text(entry.title),
+            "meta": meta.strip(),
+            "url": entry.link
+        })
     
     if not all_news:
         print("지난 24시간 동안 수집된 새 소식이 없습니다.")
