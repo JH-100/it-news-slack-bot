@@ -7,8 +7,7 @@ from datetime import datetime, timedelta
 # --- CONFIGURATION ---
 # 가져올 RSS 피드 주소 목록
 KOREAN_FEEDS = {
-    "긱스뉴스": "https://news.geeksniper.com/rss",
-    "HADA News": "https://news.hada.io/rss",
+    "GeekNews": "https://feeds.feedburner.com/geeknews-feed",
     "우아한형제들 기술블로그": "https://techblog.woowahan.com/feed/",
     "카카오테크": "https://tech.kakao.com/feed/",
 }
