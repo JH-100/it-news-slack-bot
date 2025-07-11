@@ -3,7 +3,7 @@ name: Send Daily IT News to Slack
 on:
   # 매일 아침 9시(한국 시간 기준)에 실행
   schedule:
-    - cron: '0 0 * * *' # UTC 기준 00:00 (KST 09:00)
+    - cron: '0 0 * * 1-5' # UTC 기준 00:00 (KST 09:00)
   # 수동으로 직접 실행할 수도 있도록 workflow_dispatch 추가
   workflow_dispatch:
 
