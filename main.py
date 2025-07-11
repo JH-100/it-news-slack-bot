@@ -8,14 +8,15 @@ from datetime import datetime, timedelta
 # 가져올 RSS 피드 주소 목록
 KOREAN_FEEDS = {
     "GeekNews": "https://feeds.feedburner.com/geeknews-feed",
-    "우아한형제들 기술블로그": "https://techblog.woowahan.com/feed/",
-    "카카오테크": "https://tech.kakao.com/feed/",
+    "무신사": "https://medium.com/feed/musinsa-tech",
+    "네이버": "https://d2.naver.com/d2.atom",
+    "카카오": "https://tech.kakao.com/feed/",
+    "토스": "https://toss.tech/rss.xml",
+    "NHN Toast": "https://meetup.toast.com/rss",
 }
 
 FOREIGN_FEEDS = {
     "Hacker News": "https://hnrss.org/frontpage",
-    "Lobste.rs": "https://lobste.rs/rss",
-    "Dev.to": "https://dev.to/feed",
 }
 
 # GitHub Secrets에서 API 키와 웹훅 URL 가져오기
@@ -53,8 +54,8 @@ def get_latest_news(feed_url):
             published_time = datetime(*entry.published_parsed[:6]) if hasattr(entry, 'published_parsed') else datetime.now()
             if published_time >= yesterday:
                 recent_entries.append(entry)
-        # 너무 많은 메시지를 보내지 않도록 최신 5개로 제한
-        return recent_entries[:5]
+        # 너무 많은 메시지를 보내지 않도록 최신 2개로 제한
+        return recent_entries[:2]
     except Exception as e:
         print(f"RSS 피드 '{feed_url}'를 가져오는 중 오류: {e}")
         return []
